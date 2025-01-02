@@ -7,3 +7,6 @@ pesde.lock
 
 # Rojo
 sourcemap.json
+
+# Local Builds
+build
