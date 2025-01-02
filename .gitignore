@@ -10,3 +10,6 @@ sourcemap.json
 
 # Local Builds
 build
+
+# Code
+.vscode

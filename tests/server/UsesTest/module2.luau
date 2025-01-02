@@ -1,4 +1,4 @@
-local Lumin = require(game.ReplicatedStorage.Packages.framework)
+local Lumin = require(game.ReplicatedStorage.framework.src)
 print("HI 2")
 return Lumin.New({
     Goodbye = function()

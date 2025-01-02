@@ -2,17 +2,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local CollectionService = game:GetService("CollectionService")
 local PlayerService = game:GetService("Players")
 
-local Lumin = require(ReplicatedStorage.Packages.framework)
-local Net = require(ReplicatedStorage.DevPackages.net).Server
-
-local AnnounceNetwork = Net.Event("Announcer")
+local Lumin = require(ReplicatedStorage.framework.src)
 
 local KillBricks = CollectionService:GetTagged("KillBrick")
 local KillDebounce = false
 
 local KillPart = {}
 
-function KillPart.Start()
+function KillPart.Init()
 	for _, part: Part in KillBricks do
 		part.Touched:Connect(function(basePart)
 			if KillDebounce then
@@ -25,10 +22,10 @@ function KillPart.Start()
 			local PlayerCharacter = PlayerService:GetPlayerFromCharacter(Character)
 
 			if not PlayerCharacter then
-				AnnounceNetwork:FireAll("Some random guy died 💀")
+				
 			end
 
-			AnnounceNetwork:FireAll(`{PlayerCharacter.DisplayName} died!`)
+			
 
 			if Character:FindFirstChildWhichIsA("Humanoid") then
 				local Humanoid = Character:FindFirstChild("Humanoid") :: Humanoid

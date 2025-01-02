@@ -1,5 +1,5 @@
-local Lumin = require(game.ReplicatedStorage.Packages.framework)
-local Signal = require(game.ReplicatedStorage.DevPackages.signal)
+local Lumin = require(game.ReplicatedStorage.framework.src)
+local Signal = require(game.ReplicatedStorage.framework.roblox_packages.limesignal)
 
 local CollectionService = game:GetService("CollectionService")
 local SpleefBricks = CollectionService:GetTagged("SpleefBrick")
@@ -9,22 +9,10 @@ local BrokenBricks = 0
 local TouchDebounce = false
 
 local SpleefPart = {
-    GameFinishedSignal = Signal.new()
+    GameFinishedSignal = Signal.Signal.new()
 }
 
 function SpleefPart.Init()
-	SpleefPart.GameFinishedSignal:Connect(function()
-		print("Game finished!")
-		task.wait(3)
-		for _, part: Part in SpleefBricks do
-			part.Transparency = 0
-			part.CanCollide = true
-		end
-		BrokenBricks = 0
-	end)
-end
-
-function SpleefPart.Start()
 	for _, part: Part in SpleefBricks do
 		part.Touched:Connect(function(basePart)
 			if not part.CanCollide or TouchDebounce then
@@ -45,7 +33,7 @@ function SpleefPart.Start()
 				BrokenBricks += 1
 
 				if BrokenBricks == InitialBrickCount then
-					SpleefPart.GameFinishedSignal:Fire()
+					SpleefPart.GameFinishedSignal:fire()
 				end
 			end
 
@@ -53,5 +41,15 @@ function SpleefPart.Start()
 		end)
 	end
 end
+
+SpleefPart.GameFinishedSignal:connect(function()
+    print("Game finished!")
+    task.wait(3)
+    for _, part: Part in SpleefBricks do
+        part.Transparency = 0
+        part.CanCollide = true
+    end
+    BrokenBricks = 0
+end)
 
 return Lumin.New(SpleefPart)

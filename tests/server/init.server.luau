@@ -1,9 +1,7 @@
-local Lumin = require(game.ReplicatedStorage.Packages.framework)
+local Lumin = require(game.ReplicatedStorage.framework.src)
 local Modules = script.Modules
 local UsesTest = script.UsesTest
-local CycleTest = script.CycleTest
 Lumin.Start({
     Modules,
     UsesTest,
-    CycleTest,
 })

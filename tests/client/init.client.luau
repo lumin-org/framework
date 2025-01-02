@@ -1,4 +1,4 @@
-local Lumin = require(game.ReplicatedStorage.Packages.framework)
+local Lumin = require(game.ReplicatedStorage.framework.src)
 local Modules = script.Modules
 
 Lumin.Start({Modules})

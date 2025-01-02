@@ -1,12 +1,14 @@
-export type Controller<T> = {
-	Start: (() -> ())?,
+export type Provider<T> = {
+    Name: string?,
+    Uses: { any }?,
+    Order: number?,
 	Init: (() -> ())?,
-	Uses: { any }?,
+    Start: (() -> ())?,
 } & T
 
 export type Lifecycle<T...> = {
+    Name: string,
 	Fire: (self: Lifecycle<T...>, T...) -> (),
-	Name: string,
 	Listeners: { (...any) -> () },
 }
 
