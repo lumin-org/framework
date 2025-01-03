@@ -1,13 +1,13 @@
 export type Provider<T> = {
-    Name: string?,
-    Uses: { any }?,
-    Order: number?,
+	Name: string?,
+	Uses: { any }?,
+	Order: number?,
 	Init: (() -> ())?,
-    Start: (() -> ())?,
+	Start: (() -> ())?,
 } & T
 
 export type Lifecycle<T...> = {
-    Name: string,
+	Name: string,
 	Fire: (self: Lifecycle<T...>, T...) -> (),
 	Listeners: { (...any) -> () },
 }

@@ -1,6 +1,6 @@
 local FreeThreads: { thread } = {}
 
-local function RunCallback(callback: (...any) -> (...any), thread: thread, ...)
+local function RunCallback(callback: (...any) -> ...any, thread: thread, ...)
 	callback(...)
 	table.insert(FreeThreads, thread)
 end
