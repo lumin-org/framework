@@ -1,5 +1,5 @@
 name = "lumin/framework"
-version = "10.0.0-rc1"
+version = "10.0.0-rc2"
 description = "A featherlight and quick framework for Roblox experiences"
 authors = ["jmesrje"]
 repository = "https://github.com/lumin-org/framework"
