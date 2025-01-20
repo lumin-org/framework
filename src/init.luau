@@ -23,6 +23,7 @@ local initiatedProviders: { types.Provider<any> } = {}
 
 -- Functions
 
+-- Adds the the callback from the provider to the lifecycle listeners
 local function StartLifecycles(provider: Provider<any>)
 	for _, lifecycle in addedLifecycles do
 		if (provider :: any)[lifecycle.Name] then -- Check if the provider has a lifecycle
@@ -53,7 +54,7 @@ local function InitProvider(provider: Provider<any>)
 
 		-- Use custom pcall to supply error to fatal debug
 		local success, result: debugger.ParsedError = xpcall(function()
-			-- Init the providertype(members)
+			-- Init the provider
 			debug.setmemorycategory(provider.Name);
 			(provider :: any).Init()
 		end, debugger.parse)
@@ -61,12 +62,11 @@ local function InitProvider(provider: Provider<any>)
 		if not success then
 			fatal("FatalInit", result.Message) -- If there was an error, share it with the user
 		end
-
-		table.insert(initiatedProviders, result :: any) -- Add to the loaded providers table
 	end
+    table.insert(initiatedProviders, provider) -- Add to the loaded providers table
 end
 
--- Inits the dependencies of a provider (deep indexing)type(members)
+-- Inits the dependencies of a provider (deep indexing)
 local function InitDependencies(provider: Provider<any>)
 	if provider.Uses then
 		-- Ensure prop is the correct type
@@ -104,17 +104,17 @@ local function Lifecycle<T...>(name: string, callback: ((self: Lifecycle<T...>, 
 end
 
 --[=[
-	Creates a new provider for management of various tasks. Returned table is frozen.
+	Creates a new provider for management of various tasks.
 
 	[Open Documentation](https://lumin-org.github.io/framework/api/#new)
 ]=]
 local function New<T>(members: Provider<T>): T
-    local argType = type(members)
+	local argType = type(members)
 	assert(not started, "AlreadyStarted")
-    assert(argType == "table", "InvalidType", "table", argType)
-    members.Name = members.Name or `provider-{http:GenerateGUID(false)}` -- Default naming scheme
-    members.Order = members.Order or 0 -- Default order (no order)
-	return table.freeze(members) :: any
+	assert(argType == "table", "InvalidType", "table", argType)
+	members.Name = members.Name or `provider-{http:GenerateGUID(false)}` -- Default naming scheme
+	members.Order = members.Order or 0 -- Default order (no order)
+	return members
 end
 
 --[=[
@@ -137,13 +137,13 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 
 			local success, result: debugger.ParsedError = xpcall(require, debugger.parse, module)
 
-            if not success then
-                if result.Message:find("Module code did not return exactly one value") then
-                    warn("FatalAddModule", result.Message)
-                else
-                    fatal("FatalAddModule", result.Message)
-                end
-            end
+			if not success then
+				if result.Message:find("Module code did not return exactly one value") then
+					warn("FatalAddModule", result.Message)
+				else
+					fatal("FatalAddModule", result.Message)
+				end
+			end
 
 			table.insert(addedProviders, result :: any)
 		end
@@ -164,6 +164,7 @@ local function Start()
 	end)
 
 	for _, provider in addedProviders do
+		table.freeze(provider)
 		StartLifecycles(provider)
 		InitDependencies(provider)
 		InitProvider(provider)
@@ -184,7 +185,7 @@ end
 debugger.set({
 	Logs = logs,
 	Name = "Framework",
-	URL = "https://lumin-org.github.io/framework/error/#",
+	URL = "https://lumin-org.github.io/framework/guide/errors#",
 })
 
 -- Types

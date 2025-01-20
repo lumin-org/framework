@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Move table freezing to init process instead of on creation
+
 ## [10.0.0-rc1] - 2025-01-04
 
 ## [9.1.1] - 2024-12-16

@@ -4,12 +4,14 @@ hide:
   - navigation
 ---
 
+# Lumin Framework
+
 A lightning fast & efficient framework for Roblox
 
 [Guides](./guides/){ .md-button .md-button--primary }
 [Reference](./reference/){ .md-button }
 
-## Easily Create Controllers
+## Primitive Providers
 
 ```luau
 local Framework = require(Packages.framework)
@@ -23,7 +25,7 @@ return Framework.New {
 }
 ```
 
-Boasts an efficent controller API, which is not verbose and uncomplicated.
+Providers are nothing more than tables; no metatables or anything else are used.
 
 ## Organized Dependencies
 

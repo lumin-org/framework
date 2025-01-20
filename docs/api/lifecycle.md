@@ -1,6 +1,6 @@
 # Lifecycle
 
-Implements a lifecycle API, that will use methods from controllers that already exist.
+Implements a lifecycle API, that will use methods from providers that already exist.
 
 ## Properties
 
@@ -16,7 +16,7 @@ The name of the cycle, this will correspond with the method used.
 
 ### `Listeners`
 
-A list of the methods with the name of `Name` from each controller.
+A list of the methods with the name of `Name` from each provider.
 
 - `{ (...any) -> () }`
 
@@ -31,7 +31,7 @@ The callback function which is set to run every time the `Connection` runs.
 **Parameters**
 
 - **params:** `...any`<br>
-A list of parameters to be passed to the controller method
+A list of parameters to be passed to the provider method
 
 **Returns**
 

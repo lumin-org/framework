@@ -5,14 +5,30 @@ hide:
 
 # Installation
 
-### Roblox
+The preferred method of installation for Lumin Framework is Pesde, although other methods are available if you don't use an external code editor.
 
-1. Go to the [latest releases page](https://github.com/luminlabsdev/framework/releases/latest)
+## Pesde
+
+Use a package manager to mix in other packages with Lumin Framework
+
+1. Install Pesde using the [guide](https://docs.pesde.dev)
+2. Add **lumin/framework** using `pesde add lumin/framework`
+3. Install the package using `pesde install`
+4. To update packages, use `pesde update`
+
+## Roblox
+
+Easily drag-and-drop the file into your game if using studio only
+
+1. Open the [latest release](https://github.com/lumin-org/framework/releases/latest)
 2. Download `Standalone.rbxm`
-3. Select `Insert from file`, and find `Standalone.rbxm` in your designated downloads folder
+3. Drag and drop `Standalone.rbxm` into [ReplicatedStorage](https://create.roblox.com/docs/reference/engine/classes/ReplicatedStorage)
 
-### Wally
+## Source
 
-1. Open a project in your favorite text editor
-2. Add `lumin/framework@9.0.0-rc7` to your `wally.toml` file
-3. Run `wally install` the project should be inside of your `/Packages` directory.
+Building from source allows you to make edits in whatever ways you wish
+
+1. Copy the *Git URL*: `https://github.com/lumin-org/framework.git`
+2. Clone the repository to the current dir using `git clone <git url>`
+3. Use [Pesde](https://pesde.dev) to install the neccesary CLIs and packages using `pesde install`
+4. Sync the test files along with the build to Roblox using `rojo serve dev.project.json`
