@@ -15,7 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
 - Move table freezing to init process instead of on creation
+- Addresses really big issue with `Start` not being able to run
 
 ## [10.0.0-rc1] - 2025-01-04
 
