@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.0.0-rc3] - 2025-01-21
+
 ### Removed
 
 - Removed `Lifecycles`, they do not have much use
@@ -675,7 +677,8 @@ No information available, mainly small bug fixes.
 
 - Public release! 🥳
 
-[unreleased]: https://github.com/lumin-org/framework/compare/v10.0.0-rc2...HEAD
+[unreleased]: https://github.com/lumin-org/framework/compare/v10.0.0-rc3...HEAD
+[10.0.0-rc3]: https://github.com/lumin-org/framework/compare/v10.0.0-rc2...v10.0.0-rc3
 [10.0.0-rc2]: https://github.com/lumin-org/framework/compare/v10.0.0-rc1...v10.0.0-rc2
 [10.0.0-rc1]: https://github.com/lumin-org/framework/compare/v9.1.1...v10.0.0-rc1
 [9.1.1]: https://github.com/lumin-org/framework/compare/v9.0.1...v9.1.1
