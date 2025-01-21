@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Removed `Lifecycles`, they do not have much use
+
 ## [10.0.0-rc2] - 2025-01-20
 
 ### Fixed

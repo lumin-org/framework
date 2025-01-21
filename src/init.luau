@@ -1,37 +1,23 @@
 -- Variables
-local http = game:GetService("HttpService")
+local Http = game:GetService("HttpService")
 
-local types = require(script.types)
-local logs = require(script.logs)
-local spawn = require(script.spawn)
-local debugger = require(script.Parent.roblox_packages.debugger)
+local Types = require(script.types)
+local Logs = require(script.logs)
+local Spawn = require(script.spawn)
+local Debugger = require(script.Parent.roblox_packages.debugger)
 
-local assert = debugger.assert
-local fatal = debugger.fatal
-local warn = debugger.warn
+local assert = Debugger.assert
+local fatal = Debugger.fatal
+local warn = Debugger.warn
 
-local started = false
+local Started = false
 
--- Names that reserved for the framework only
-local reservedNames: { string } = { "Init", "Start", "Uses", "Order", "Name" }
 -- Providers imported using the Add function
-local addedProviders: { types.Provider<any> } = {}
--- Lifecycles created using the Lifecycle function
-local addedLifecycles: { types.Lifecycle<...any> } = {}
+local AddedProviders: { Types.Provider<any> } = {}
 -- Providers that have been loaded already
-local initiatedProviders: { types.Provider<any> } = {}
+local InitiatedProviders: { Types.Provider<any> } = {}
 
 -- Functions
-
--- Adds the the callback from the provider to the lifecycle listeners
-local function StartLifecycles(provider: Provider<any>)
-	for _, lifecycle in addedLifecycles do
-		if (provider :: any)[lifecycle.Name] then -- Check if the provider has a lifecycle
-			-- Add the lifecycle callback to the listeners of it
-			table.insert(lifecycle.Listeners, (provider :: any)[lifecycle.Name])
-		end
-	end
-end
 
 -- Starts a provider
 local function StartProvider(provider: Provider<any>)
@@ -41,7 +27,7 @@ local function StartProvider(provider: Provider<any>)
 		assert(argType == "function", "InvalidType", "function", argType)
 		-- Start the provider
 		debug.setmemorycategory(provider.Name)
-		spawn(provider.Start)
+		Spawn(provider.Start)
 	end
 end
 
@@ -53,17 +39,17 @@ local function InitProvider(provider: Provider<any>)
 		assert(argType == "function", "InvalidType", "function", argType)
 
 		-- Use custom pcall to supply error to fatal debug
-		local success, result: debugger.ParsedError = xpcall(function()
+		local success, result: Debugger.ParsedError = xpcall(function()
 			-- Init the provider
 			debug.setmemorycategory(provider.Name);
 			(provider :: any).Init()
-		end, debugger.parse)
+		end, Debugger.parse)
 
 		if not success then
 			fatal("FatalInit", result.Message) -- If there was an error, share it with the user
 		end
 	end
-    table.insert(initiatedProviders, provider) -- Add to the loaded providers table
+    table.insert(InitiatedProviders, provider) -- Add to the loaded providers table
 end
 
 -- Inits the dependencies of a provider (deep indexing)
@@ -74,33 +60,12 @@ local function InitDependencies(provider: Provider<any>)
 		assert(argType == "table", "InvalidType", "table", argType)
 
 		for _, usedProvider in provider.Uses :: any do
-			if usedProvider.Init and not table.find(initiatedProviders, usedProvider) then
+			if usedProvider.Init and not table.find(InitiatedProviders, usedProvider) then
 				InitDependencies(usedProvider) -- Check if there are more dependencies nested
 				InitProvider(usedProvider) -- Load the dependency
 			end
 		end
 	end
-end
-
---[=[
-	Creates a new lifecycle that hooks onto already existing provider methods.
-
-	[Open Documentation](https://lumin-org.github.io/framework/api/#lifecycle)
-]=]
-local function Lifecycle<T...>(name: string, callback: ((self: Lifecycle<T...>, ...any) -> ())?): Lifecycle<T...>
-	assert(not started, "AlreadyStarted")
-	assert(not table.find(reservedNames, name), "ReservedName", name, "lifecycle")
-	local lifecycle = table.freeze({
-		Name = name :: string,
-		Listeners = {},
-		Fire = callback or function(self: Lifecycle<T...>, ...: any)
-			for _, listener in self.Listeners do
-				spawn(listener, ...)
-			end
-		end,
-	})
-	table.insert(addedLifecycles, lifecycle)
-	return lifecycle
 end
 
 --[=[
@@ -110,9 +75,9 @@ end
 ]=]
 local function New<T>(members: Provider<T>): T
 	local argType = type(members)
-	assert(not started, "AlreadyStarted")
+	assert(not Started, "AlreadyStarted")
 	assert(argType == "table", "InvalidType", "table", argType)
-	members.Name = members.Name or `provider-{http:GenerateGUID(false)}` -- Default naming scheme
+	members.Name = members.Name or `provider-{Http:GenerateGUID(false)}` -- Default naming scheme
 	members.Order = members.Order or 0 -- Default order (no order)
 	return members
 end
@@ -123,7 +88,7 @@ end
 	[Open Documentation](https://lumin-org.github.io/framework/api/#add)
 ]=]
 local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
-	assert(not started, "AlreadyStarted")
+	assert(not Started, "AlreadyStarted")
 
 	for _, dir in dirs do
 		for _, module in dir:GetDescendants() do
@@ -135,7 +100,7 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 				continue
 			end
 
-			local success, result: debugger.ParsedError = xpcall(require, debugger.parse, module)
+			local success, result: Debugger.ParsedError = xpcall(require, Debugger.parse, module)
 
 			if not success then
 				if result.Message:find("Module code did not return exactly one value") then
@@ -145,53 +110,50 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 				end
 			end
 
-			table.insert(addedProviders, result :: any)
+			table.insert(AddedProviders, result :: any)
 		end
 	end
 end
 
 --[=[
-	Starts the framework, loading all the created Providers and starting Lifecycles.
+	Starts the framework, loading all the created Providers.
 
 	[Open Documentation](https://lumin-org.github.io/framework/api/#start)
 ]=]
 local function Start()
-	assert(not started, "AlreadyStarted")
+	assert(not Started, "AlreadyStarted")
 
 	-- Sort by load order, least to greatest
-	table.sort(addedProviders, function(a: any, b: any)
+	table.sort(AddedProviders, function(a: any, b: any)
 		return a.Order < b.Order
 	end)
 
-	for _, provider in addedProviders do
+	for _, provider in AddedProviders do
 		table.freeze(provider)
-		StartLifecycles(provider)
 		InitDependencies(provider)
 		InitProvider(provider)
 	end
 
-	for _, provider in initiatedProviders do
+	for _, provider in InitiatedProviders do
 		StartProvider(provider)
 	end
 
-	started = true
+	Started = true
 
-	table.freeze(addedProviders)
-	table.freeze(addedLifecycles)
+	table.freeze(AddedProviders)
 end
 
 -- Debugger
 
-debugger.set({
-	Logs = logs,
+Debugger.set({
+	Logs = Logs,
 	Name = "Framework",
 	URL = "https://lumin-org.github.io/framework/guide/errors#",
 })
 
 -- Types
 
-export type Lifecycle<T...> = types.Lifecycle<T...>
-export type Provider<T> = types.Provider<T>
+export type Provider<T> = Types.Provider<T>
 
 -- Module
 
@@ -199,5 +161,4 @@ return table.freeze({
 	Start = Start,
 	Add = Add,
 	New = New,
-	Lifecycle = Lifecycle,
 })

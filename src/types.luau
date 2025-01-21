@@ -6,10 +6,4 @@ export type Provider<T> = {
 	Start: (() -> ())?,
 } & T
 
-export type Lifecycle<T...> = {
-	Name: string,
-	Fire: (self: Lifecycle<T...>, T...) -> (),
-	Listeners: { (...any) -> () },
-}
-
 return {}
