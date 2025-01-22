@@ -55,6 +55,20 @@ jobs:
           - name: Standalone build
             run: rojo build standalone.project.json --output ./Standalone.rbxm
 
+          - name: Setup Node
+            uses: actions/setup-node@v4.1.0
+            with:
+                node-version: latest
+
+          - name: Install Node dependencies
+            run: npm install
+
+          - name: Typescript build
+            run: npx rbxtsc --rojo typescript.project.json
+
+          - name: Package typescript
+            run: npm pack
+
           - name: Standalone release
             uses: softprops/action-gh-release@v2.0.9
             with:
@@ -67,6 +81,7 @@ jobs:
                 ${{ needs.changelog.outputs.release-body }}
               files: |
                 ./Standalone.rbxm
+                ./rbxts-lumin-framework-${{ github.ref_name }}.tgz
 
     package:
         name: Package

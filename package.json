@@ -1,10 +1,28 @@
 {
-  "devDependencies": {
-    "vitepress": "^1.6.1"
-  },
-  "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
-  }
+    "name": "@rbxts/lumin-framework",
+    "version": "v10.0.0-rc4",
+    "main": "out/init.luau",
+    "typings": "out/index.d.ts",
+    "license": "MIT",
+    "type": "commonjs",
+    "description": "A featherlight and quick framework for Roblox experiences",
+    "files": [
+        "**/out/**",
+        "!**/*.tsbuildinfo",
+        "**/roblox_packages/**"
+    ],
+    "dependencies": {
+        "@rbxts/compiler-types": "^3.0.0-types.0",
+        "@rbxts/types": "^1.0.813",
+        "roblox-ts": "^3.0.0",
+        "typescript": "^5.7.3"
+    },
+    "devDependencies": {
+        "vitepress": "^1.6.1"
+    },
+    "scripts": {
+        "docs:dev": "vitepress dev docs",
+        "docs:build": "vitepress build docs",
+        "docs:preview": "vitepress preview docs"
+    }
 }
