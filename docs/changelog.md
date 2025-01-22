@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Completely revamped documentation (guides and API)
 - Added back `Lifecycles` (they're actually really good)
 
 ### Changed
