@@ -119,6 +119,7 @@ local function New<T>(members: Provider<T>): T
 	assert(argType == "table", "InvalidType", "table", argType)
 	members.Name = members.Name or `provider-{Http:GenerateGUID(false)}` -- Default naming scheme
 	members.Order = members.Order or 1 -- Default order (no order)
+	table.insert(AddedProviders, members)
 	return members
 end
 
@@ -131,7 +132,7 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 	assert(not Started, "AlreadyStarted")
 
 	for _, dir in dirs do
-		for _, module in dir:GetChildren() do
+		for _, module in dir:GetDescendants() do
 			if not module:IsA("ModuleScript") then
 				continue
 			end
@@ -149,8 +150,6 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 					fatal("FatalAddModule", result.Message)
 				end
 			end
-
-			table.insert(AddedProviders, result :: any)
 		end
 	end
 end
