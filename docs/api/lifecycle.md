@@ -1,14 +1,12 @@
 # Lifecycle
 
-Implements a lifecycle API, that will use methods from providers that already exist.
+The [`Lifecycle`]() class
 
 ## Properties
 
----
-
 ### `Name`
 
-The name of the cycle, this will correspond with the method used.
+The name of the lifecycle, this will correspond with the method used.
 
 - `string`
 
@@ -22,11 +20,9 @@ A list of the methods with the name of `Name` from each provider.
 
 ## Methods
 
----
-
 ### `Fire`
 
-The callback function which is set to run every time the `Connection` runs.
+Run the listeners of the lifecycle.
 
 **Parameters**
 

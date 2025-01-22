@@ -11,13 +11,28 @@ local fatal = Debugger.fatal
 local warn = Debugger.warn
 
 local Started = false
+local Profiling = false
 
+-- Names that are reserved for the framework only
+local ReservedNames: { string } = { "Init", "Start", "Uses", "Order", "Name" }
 -- Providers imported using the Add function
 local AddedProviders: { Types.Provider<any> } = {}
+-- Lifecycles created using the Lifecycle function
+local AddedLifecycles: { Types.Lifecycle<...any> } = {}
 -- Providers that have been loaded already
 local InitiatedProviders: { Types.Provider<any> } = {}
 
 -- Functions
+
+-- Adds the the callback from the provider to the lifecycle listeners
+local function StartLifecycles(provider: Provider<any>)
+	for _, lifecycle in AddedLifecycles do
+		if (provider :: any)[lifecycle.Name] then -- Check if the provider has a lifecycle
+			-- Add the lifecycle callback to the listeners of it
+			table.insert(lifecycle.Listeners, (provider :: any)[lifecycle.Name])
+		end
+	end
+end
 
 -- Starts a provider
 local function StartProvider(provider: Provider<any>)
@@ -26,7 +41,9 @@ local function StartProvider(provider: Provider<any>)
 		local argType = type(provider.Start)
 		assert(argType == "function", "InvalidType", "function", argType)
 		-- Start the provider
-		debug.setmemorycategory(provider.Name)
+		if Profiling then
+			debug.setmemorycategory(provider.Name)
+		end
 		Spawn(provider.Start)
 	end
 end
@@ -41,7 +58,9 @@ local function InitProvider(provider: Provider<any>)
 		-- Use custom pcall to supply error to fatal debug
 		local success, result: Debugger.ParsedError = xpcall(function()
 			-- Init the provider
-			debug.setmemorycategory(provider.Name);
+			if Profiling then
+				debug.setmemorycategory(provider.Name)
+			end
 			(provider :: any).Init()
 		end, Debugger.parse)
 
@@ -49,7 +68,7 @@ local function InitProvider(provider: Provider<any>)
 			fatal("FatalInit", result.Message) -- If there was an error, share it with the user
 		end
 	end
-    table.insert(InitiatedProviders, provider) -- Add to the loaded providers table
+	table.insert(InitiatedProviders, provider) -- Add to the loaded providers table
 end
 
 -- Inits the dependencies of a provider (deep indexing)
@@ -69,6 +88,27 @@ local function InitDependencies(provider: Provider<any>)
 end
 
 --[=[
+	Creates a new lifecycle that hooks onto already existing provider methods.
+
+	[Open Documentation](https://lumin-org.github.io/framework/api/#lifecycle)
+]=]
+local function Lifecycle<T...>(name: string, callback: ((self: Lifecycle<T...>, ...any) -> ())?): Lifecycle<T...>
+	assert(not Started, "AlreadyStarted")
+	assert(not table.find(ReservedNames, name), "ReservedName", name, "lifecycle")
+	local Lifecycle = table.freeze({
+		Name = name :: string,
+		Listeners = {},
+		Fire = callback or function(self: Lifecycle<T...>, ...: any)
+			for _, listener in self.Listeners do
+				Spawn(listener, ...)
+			end
+		end,
+	})
+	table.insert(AddedLifecycles, Lifecycle)
+	return Lifecycle
+end
+
+--[=[
 	Creates a new provider for management of various tasks.
 
 	[Open Documentation](https://lumin-org.github.io/framework/api/#new)
@@ -78,7 +118,7 @@ local function New<T>(members: Provider<T>): T
 	assert(not Started, "AlreadyStarted")
 	assert(argType == "table", "InvalidType", "table", argType)
 	members.Name = members.Name or `provider-{Http:GenerateGUID(false)}` -- Default naming scheme
-	members.Order = members.Order or 0 -- Default order (no order)
+	members.Order = members.Order or 1 -- Default order (no order)
 	return members
 end
 
@@ -91,7 +131,7 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 	assert(not Started, "AlreadyStarted")
 
 	for _, dir in dirs do
-		for _, module in dir:GetDescendants() do
+		for _, module in dir:GetChildren() do
 			if not module:IsA("ModuleScript") then
 				continue
 			end
@@ -120,8 +160,13 @@ end
 
 	[Open Documentation](https://lumin-org.github.io/framework/api/#start)
 ]=]
-local function Start()
+local function Start(config: { profiling: boolean? }?)
 	assert(not Started, "AlreadyStarted")
+
+	if config then
+		-- Set configurations
+		Profiling = config.profiling or Profiling
+	end
 
 	-- Sort by load order, least to greatest
 	table.sort(AddedProviders, function(a: any, b: any)
@@ -130,6 +175,7 @@ local function Start()
 
 	for _, provider in AddedProviders do
 		table.freeze(provider)
+		StartLifecycles(provider)
 		InitDependencies(provider)
 		InitProvider(provider)
 	end
@@ -154,6 +200,7 @@ Debugger.set({
 -- Types
 
 export type Provider<T> = Types.Provider<T>
+export type Lifecycle<T...> = Types.Lifecycle<T...>
 
 -- Module
 
@@ -161,4 +208,5 @@ return table.freeze({
 	Start = Start,
 	Add = Add,
 	New = New,
+	Lifecycle = Lifecycle,
 })

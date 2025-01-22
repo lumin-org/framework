@@ -1,10 +1,8 @@
 # Provider
 
-Responsible for controlling most of the game's functions
+The [`Provider`]() class
 
 ## Properties
-
----
 
 ### `Uses`
 
@@ -12,9 +10,23 @@ Any other providers that the current one uses
 
 - [`{ Provider }`](./provider.md)
 
-## Functions
+---
+
+### `Order`
+
+The order that the provider should be loaded in. Defaults to 1 (no order).
+
+- `number`
 
 ---
+
+### `Name`
+
+The name of the provider. Defaults to `provider-<GUID>`.
+
+- `string`
+
+## Functions
 
 ### `Init`
 

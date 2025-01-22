@@ -5,11 +5,12 @@ lune_packages
 luau_packages
 pesde.lock
 
+# Vite
+node_modules
+docs/.vitepress/cache
+
 # Rojo
 sourcemap.json
-
-# Local Builds
-build
 
 # Code
 .vscode
