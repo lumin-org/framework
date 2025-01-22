@@ -9,6 +9,10 @@ local Announcement = {
     UI = {}
 }
 
+function Announcement.Heartbeat(delta)
+    print(delta)
+end
+
 function Announcement.Init()
 	Announcement.UI.Gui = Player.PlayerGui:WaitForChild("Announce")
 	Announcement.UI.Label = Announcement.UI.Gui:WaitForChild("AnnounceLabel")
