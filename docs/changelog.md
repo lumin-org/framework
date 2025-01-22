@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.0.0-rc4] - 2025-01-22
+
 ### Added
 
 - Completely revamped documentation (guides and API)
@@ -678,7 +680,8 @@ No information available, mainly small bug fixes.
 
 - Public release! 🥳
 
-[unreleased]: https://github.com/lumin-org/framework/compare/v10.0.0-rc3...HEAD
+[unreleased]: https://github.com/lumin-org/framework/compare/v10.0.0-rc4...HEAD
+[10.0.0-rc4]: https://github.com/lumin-org/framework/compare/v10.0.0-rc3...v10.0.0-rc4
 [10.0.0-rc3]: https://github.com/lumin-org/framework/compare/v10.0.0-rc2...v10.0.0-rc3
 [10.0.0-rc2]: https://github.com/lumin-org/framework/compare/v10.0.0-rc1...v10.0.0-rc2
 [10.0.0-rc1]: https://github.com/lumin-org/framework/compare/v9.1.1...v10.0.0-rc1
