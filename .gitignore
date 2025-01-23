@@ -12,5 +12,8 @@ docs/.vitepress/cache
 # Rojo
 sourcemap.json
 
+# Rbxts
+out
+
 # Code
 .vscode
