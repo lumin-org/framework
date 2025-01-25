@@ -4,7 +4,7 @@
 [![build](https://img.shields.io/github/actions/workflow/status/lumin-org/framework/release.yml?style=plastic&logo=github&logoColor=FFFFFF&label=build)](https://github.com/lumin-org/framework/blob/main/.github/workflows/release.yml)
 [![discord](https://img.shields.io/discord/1105688855375511642?logo=discord&logoColor=white&label=chat&color=4d3dff&style=plastic)](https://lumin-org.github.io/to/discord)
 
-A featherlight and quick framework for Roblox experiences.
+A featherlight framework for Roblox experiences.
 
 ## Prerequisites
 

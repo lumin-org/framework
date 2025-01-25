@@ -1,11 +1,15 @@
 {
     "name": "@rbxts/lumin-framework",
-    "version": "v10.0.0-rc4",
+    "version": "10.0.0-rc5",
     "main": "out/init.luau",
     "typings": "out/index.d.ts",
     "license": "MIT",
     "type": "commonjs",
-    "description": "A featherlight and quick framework for Roblox experiences",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lumin-org/framework.git"
+    },
+    "description": "A featherlight framework for Roblox experiences",
     "files": [
         "**/out/**",
         "!**/*.tsbuildinfo",

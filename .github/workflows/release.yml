@@ -35,9 +35,9 @@ jobs:
               default_author: github_actions
 
     build:
-        name: Build
-        runs-on: ubuntu-latest
+        name: Builds
         needs: changelog
+        runs-on: ubuntu-latest
         steps:
           - uses: actions/checkout@v4
 
@@ -46,28 +46,14 @@ jobs:
             with:
               cache: true
 
-          - name: Install dependencies
+          - name: Install Pesde dependencies
             run: pesde install
 
           - name: Format code
             run: stylua src/
 
           - name: Standalone build
-            run: rojo build standalone.project.json --output ./Standalone.rbxm
-
-          - name: Setup Node
-            uses: actions/setup-node@v4.1.0
-            with:
-                node-version: latest
-
-          - name: Install Node dependencies
-            run: npm install
-
-          - name: Typescript build
-            run: npx rbxtsc --rojo typescript.project.json
-
-          - name: Package typescript
-            run: npm pack
+            run: rojo build standalone.project.json --output ./standalone.rbxm
 
           - name: Standalone release
             uses: softprops/action-gh-release@v2.0.9
@@ -80,15 +66,23 @@ jobs:
                 ## Changelog
                 ${{ needs.changelog.outputs.release-body }}
               files: |
-                ./Standalone.rbxm
-                ./rbxts-lumin-framework-${{ github.ref_name }}.tgz
+                ./standalone.rbxm
 
     package:
-        name: Package
-        runs-on: ubuntu-latest
+        name: Packages
         needs: changelog
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          id-token: write
         steps:
         - uses: actions/checkout@v4
+
+        - name: Setup Node
+          uses: actions/setup-node@v4.1.0
+          with:
+            node-version: latest
+            registry-url: https://registry.npmjs.org
 
         - name: Setup Pesde
           uses: lumin-org/setup-pesde@v0.3.2
@@ -96,7 +90,19 @@ jobs:
             cache: true
             token: '${{ secrets.PESDE_TOKEN }}'
 
-        - name: Publish
+        - name: Install Node dependencies
+          run: npm ci
+
+        - name: Install Pesde dependencies
+          run: pesde install
+
+        - name: Publish Node package
           run: |
-            pesde install
+            npx rbxtsc --rojo typescript.project.json
+            npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+        - name: Publish Pesde package
+          run: |
             pesde publish -y

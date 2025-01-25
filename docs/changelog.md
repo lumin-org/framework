@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Proper `rbxts` support - #39
+
 ## [10.0.0-rc4] - 2025-01-22
 
 ### Added

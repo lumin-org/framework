@@ -132,7 +132,7 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 	assert(not Started, "AlreadyStarted")
 
 	for _, dir in dirs do
-		for _, module in dir:GetDescendants() do
+		for _, module in dir:GetChildren() do
 			if not module:IsA("ModuleScript") then
 				continue
 			end
