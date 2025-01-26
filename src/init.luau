@@ -27,7 +27,7 @@ local InitiatedProviders: { Types.Provider<any> } = {}
 -- Adds the the callback from the provider to the lifecycle listeners
 local function StartLifecycles(provider: Provider<any>)
 	for _, lifecycle in AddedLifecycles do
-		if (provider :: any)[lifecycle.Name] then -- Check if the provider has a lifecycle
+		if (provider :: any)[lifecycle.Name] and type((provider :: any)[lifecycle.Name]) == "function" then -- Check if the provider has a lifecycle
 			-- Add the lifecycle callback to the listeners of it
 			table.insert(lifecycle.Listeners, (provider :: any)[lifecycle.Name])
 		end
@@ -50,7 +50,7 @@ end
 
 -- Inits a provider
 local function InitProvider(provider: Provider<any>)
-	if provider.Init then
+	if provider.Init and not table.find(InitiatedProviders, provider) then
 		-- Ensure prop is the correct type
 		local argType = type(provider.Init)
 		assert(argType == "function", "InvalidType", "function", argType)
@@ -102,6 +102,10 @@ local function Lifecycle<T...>(name: string, callback: ((self: Lifecycle<T...>, 
 			for _, listener in self.Listeners do
 				Spawn(listener, ...)
 			end
+		end,
+		Disconnect = function(self: Lifecycle<T...>)
+			table.clear(self.Listeners)
+			table.freeze(self.Listeners)
 		end,
 	})
 	table.insert(AddedLifecycles, Lifecycle)
@@ -159,12 +163,12 @@ end
 
 	[Open Documentation](https://lumin-org.github.io/framework/api/#start)
 ]=]
-local function Start(config: { profiling: boolean? }?)
+local function Start(config: { Profiling: boolean? }?)
 	assert(not Started, "AlreadyStarted")
 
 	if config then
 		-- Set configurations
-		Profiling = config.profiling or Profiling
+		Profiling = config.Profiling or Profiling
 	end
 
 	-- Sort by load order, least to greatest
@@ -203,9 +207,13 @@ export type Lifecycle<T...> = Types.Lifecycle<T...>
 
 -- Module
 
-return table.freeze({
+return table.freeze(setmetatable({
 	Start = Start,
 	Add = Add,
 	New = New,
 	Lifecycle = Lifecycle,
-})
+}, {
+	__call = function<T>(_, members: T): Provider<T>
+		return New(members :: any)
+	end,
+}))
