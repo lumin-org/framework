@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Removed `New` in favor of using `Add` for all modules
+
 ## [10.0.0-rc5] - 2025-01-25
 
 ### Added

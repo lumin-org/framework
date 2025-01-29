@@ -26,7 +26,7 @@ Run the listeners of the lifecycle.
 
 **Parameters**
 
-- **params:** `...any`<br>
+- **params:** `...any`\
 A list of parameters to be passed to the provider method
 
 **Returns**

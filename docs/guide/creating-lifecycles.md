@@ -18,30 +18,26 @@ end)
 ```
 
 ```luau [provider1.luau]
-local Framework = require(path.to.framework)
-
 ...
 
 local function Heartbeat()
     print("Provider 1")
 end
 
-return Framework.New {
+return {
     Heartbeat = Heartbeat,
     ...
 }
 ```
 
 ```luau [provider2.luau]
-local Framework = require(path.to.framework)
-
 ...
 
 local function Heartbeat()
     print("Provider 2")
 end
 
-return Framework.New {
+return {
     Heartbeat = Heartbeat,
     ...
 }

@@ -1,14 +1,12 @@
 # Creating Providers
 
-Creating a provider using the `.New` function allows you to ensure that you built it correctly. It checks the types of the properties provided, and also inserts defaults if they were not already there.
+Creating a provider is as easy as creating a normal module. `Add` will automatically infer whether the added modules pass as providers and there is no constructor needed.
 
 ## Usage
 
 Here, we will create a very simple provider that has usage of both `Init` and `Start`.
 
 ```luau
-local Framework = require(path.to.framework)
-
 -- This will run first
 local function Init()
     print("Initiated!")
@@ -19,7 +17,7 @@ local function Start()
     print("Started!")
 end
 
-return Framework.New {
+return {
     Init = Init,
     Start = Start,
 }

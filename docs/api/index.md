@@ -37,21 +37,6 @@ A list of settings or options to apply to the framework.
 
 ---
 
-### `New`
-
-Creates a new provider for management of various tasks.
-
-**Parameters**
-
-- **members:** `{ any }`\
-This is where functions, properties, and methods are stored. Use this like a generic module
-
-**Returns**
-
-- [`Provider`](./provider.md)
-
----
-
 ### `Lifecycle`
 
 Creates a new lifecycle that hooks onto already existing controller methods.

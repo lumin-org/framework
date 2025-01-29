@@ -1,6 +1,4 @@
 -- Variables
-local Http = game:GetService("HttpService")
-
 local Types = require(script.types)
 local Logs = require(script.logs)
 local Spawn = require(script.spawn)
@@ -8,11 +6,13 @@ local Debugger = require(script.Parent.roblox_packages.debugger)
 
 local assert = Debugger.assert
 local fatal = Debugger.fatal
-local warn = Debugger.warn
 
 local Started = false
 local Profiling = false
+local ProviderCount = 0
 
+-- Names that have been already claimed by other providers
+local ProviderNames: { string } = {}
 -- Names that are reserved for the framework only
 local ReservedNames: { string } = { "Init", "Start", "Uses", "Order", "Name" }
 -- Providers imported using the Add function
@@ -113,21 +113,6 @@ local function Lifecycle<T...>(name: string, callback: ((self: Lifecycle<T...>, 
 end
 
 --[=[
-	Creates a new provider for management of various tasks.
-
-	[Open Documentation](https://lumin-org.github.io/framework/api/#new)
-]=]
-local function New<T>(members: Provider<T>): T
-	local argType = type(members)
-	assert(not Started, "AlreadyStarted")
-	assert(argType == "table", "InvalidType", "table", argType)
-	members.Name = members.Name or `provider-{Http:GenerateGUID(false)}` -- Default naming scheme
-	members.Order = members.Order or 1 -- Default order (no order)
-	table.insert(AddedProviders, members)
-	return members
-end
-
---[=[
 	Adds all of the modules located within the specified dirs to the framework loading stack.
 
 	[Open Documentation](https://lumin-org.github.io/framework/api/#add)
@@ -145,15 +130,9 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 				continue
 			end
 
-			local success, result: Debugger.ParsedError = xpcall(require, Debugger.parse, module)
-
-			if not success then
-				if result.Message:find("Module code did not return exactly one value") then
-					warn("FatalAddModule", result.Message)
-				else
-					fatal("FatalAddModule", result.Message)
-				end
-			end
+			local success, result = pcall(require, module)
+			assert(success, "FatalAddModule", result)
+			table.insert(AddedProviders, result)
 		end
 	end
 end
@@ -171,14 +150,25 @@ local function Start(config: { Profiling: boolean? }?)
 		Profiling = config.Profiling or Profiling
 	end
 
+	-- Default provider properties
+	for _, provider in AddedProviders do
+        provider.Order = provider.Order or 1 -- Default order (no order)
+        ProviderCount += 1
+		local DefaultName = provider.Name or `provider-{ProviderCount}`
+		if not table.find(ProviderNames, DefaultName) then
+            provider.Name = DefaultName -- Default naming scheme
+			table.insert(ProviderNames, DefaultName)
+		end
+        table.freeze(provider)
+	end
+
 	-- Sort by load order, least to greatest
 	table.sort(AddedProviders, function(a: any, b: any)
 		return a.Order < b.Order
 	end)
 
 	for _, provider in AddedProviders do
-		table.freeze(provider)
-		StartLifecycles(provider)
+        StartLifecycles(provider)
 		InitDependencies(provider)
 		InitProvider(provider)
 	end
@@ -207,13 +197,8 @@ export type Lifecycle<T...> = Types.Lifecycle<T...>
 
 -- Module
 
-return table.freeze(setmetatable({
+return table.freeze({
 	Start = Start,
 	Add = Add,
-	New = New,
 	Lifecycle = Lifecycle,
-}, {
-	__call = function<T>(_, members: T): Provider<T>
-		return New(members :: any)
-	end,
-}))
+})

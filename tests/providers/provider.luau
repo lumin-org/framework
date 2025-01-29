@@ -1,5 +1,3 @@
-local Packages = script.Parent.Parent.Parent
-local Framework = require(Packages.framework.src)
 local TEST_NAME = "PROVIDER-TEST"
 
 local function Init()
@@ -10,7 +8,7 @@ local function Start()
     print(`{TEST_NAME}: Start (second)`)
 end
 
-return Framework {
+return {
     Init = Init,
     Start = Start,
     Name = "provider-custom",

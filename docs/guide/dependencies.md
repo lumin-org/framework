@@ -8,27 +8,24 @@ All that needs to be appended to your provider is `Uses` on creation. This will 
 
 ::: code-group
 ```luau [provider.luau]
-local Framework = require(path.to.framework)
 local Dependency = require(path.to.dependency)
 
 local function Init()
     print("This will print second!")
 end
 
-return Framework.New {
+return {
     Uses = { Dependency }
     Init = Init,
 }
 ```
 
 ```luau [dependency.luau]
-local Framework = require(path.to.framework)
-
 local function Init()
     print("This will print first!")
 end
 
-return Framework.New {
+return {
     Init = Init,
 }
 ```

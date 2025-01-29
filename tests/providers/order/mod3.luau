@@ -1,12 +1,10 @@
-local Packages = script.Parent.Parent.Parent.Parent
-local Framework = require(Packages.framework.src)
 local TEST_NAME = "ORDER-TEST"
 
 local function Init()
     print(`{TEST_NAME}: Third`)
 end
 
-return Framework {
+return {
     Init = Init,
     Order = -1,
 }
