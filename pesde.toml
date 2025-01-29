@@ -1,6 +1,6 @@
 name = "lumin/framework"
 version = "10.0.0"
-description = "A featherlight framework for Roblox experiences"
+description = "A featherlight framework for Luau games"
 authors = ["jmesrje"]
 repository = "https://github.com/lumin-org/framework"
 license = "MIT"
