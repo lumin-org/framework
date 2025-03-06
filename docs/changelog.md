@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.0.0] - 2025-03-06
+
 ## [10.0.0] - 2025-01-29
 
 ### Removed
@@ -692,7 +694,8 @@ No information available, mainly small bug fixes.
 
 - Public release! 🥳
 
-[unreleased]: https://github.com/lumin-org/framework/compare/v10.0.0...HEAD
+[unreleased]: https://github.com/lumin-org/framework/compare/v11.0.0...HEAD
+[11.0.0]: https://github.com/lumin-org/framework/compare/v10.0.0...v11.0.0
 [10.0.0]: https://github.com/lumin-org/framework/compare/v10.0.0-rc5...v10.0.0
 [10.0.0-rc5]: https://github.com/lumin-org/framework/compare/v10.0.0-rc4...v10.0.0-rc5
 [10.0.0-rc4]: https://github.com/lumin-org/framework/compare/v10.0.0-rc3...v10.0.0-rc4
