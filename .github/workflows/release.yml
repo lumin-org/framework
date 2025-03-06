@@ -11,6 +11,23 @@ permissions:
   id-token: write
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          
+      - name: Setup Pesde
+        uses: lumin-org/setup-pesde@v0.4.1
+        with:
+          token: ${{ secrets.PESDE_TOKEN }}
+          cache: true
+          
+      - name: Install dependencies
+        run: pesde install
+        
   changelog:
     name: Changelog
     runs-on: ubuntu-latest
@@ -42,14 +59,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-
-      - name: Setup Pesde
-        uses: lumin-org/setup-pesde@v0.4.1
-        with:
-          cache: true
-
-      - name: Install dependencies
-        run: pesde install
 
       - name: Build
         run: rojo build standalone.project.json --output ./standalone.rbxm
@@ -88,13 +97,7 @@ jobs:
             pesde.toml
             package.json
 
-      - name: Setup Pesde
-        uses: lumin-org/setup-pesde@v0.4.1
-        with:
-          cache: true
-          token: "${{ secrets.PESDE_TOKEN }}"
-
-      - name: Install dependencies
+      - name: Regenerate lockfile
         run: |
           pesde install
 
