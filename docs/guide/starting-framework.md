@@ -6,5 +6,5 @@ After all of your provider directories have been added, you can then finally sta
 local Framework = require(path.to.framework)
 
 ...
-Framework.Start()
+Framework.Start(...config)
 ```

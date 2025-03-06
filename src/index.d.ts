@@ -10,13 +10,14 @@ declare namespace Framework {
         Start?: () => void
     }
 
-    export type Lifecycle<T extends any[]> = {
+    export type Hook<T extends any[]> = {
         Name: string
-        Fire: (self: Lifecycle<T>, ...args: T) => void;
+        Fire: (self: Hook<T>, ...args: T) => void;
+        Unhook: (self: Hook<T>) => void;
         Listeners: Array<(...args: T) => void>;
     }
 
     export function Start(): void;
     export function Add(dirs: Array<Instance>, filter?: (module: ModuleScript) => boolean): void;
-    export function Lifecycle<T extends any[]>(name: string, callback?: (self: Lifecycle<T>, args: T) => void): Lifecycle<T>;
+    export function Hook<T extends any[]>(name: string, callback?: (self: Hook<T>, args: T) => void): Hook<T>;
 }

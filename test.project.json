@@ -1,21 +1,21 @@
 {
-	"emitLegacyScripts": false,
-	"name": "framework",
-	"tree": {
-		"$className": "DataModel",
-		"ReplicatedStorage": {
-			"framework": {
-				"$className": "Folder",
-				"src": {
-					"$path": "src"
-				},
-                "roblox_packages": {
-                    "$path": "roblox_packages"
-                }
-			},
-			"tests": {
-                "$path": "tests"
-			}
-		}
-	}
+  "emitLegacyScripts": false,
+  "name": "framework",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "framework": {
+        "$className": "Folder",
+        "src": {
+          "$path": "src"
+        },
+        "roblox_packages": {
+          "$path": "roblox_packages"
+        }
+      },
+      "tests": {
+        "$path": "tests"
+      }
+    }
+  }
 }

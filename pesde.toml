@@ -1,15 +1,10 @@
 name = "lumin/framework"
 version = "10.0.0"
-description = "A featherlight framework for Luau games"
+description = "A feather light game framework for Luau"
 authors = ["jmesrje"]
 repository = "https://github.com/lumin-org/framework"
 license = "MIT"
-includes = [
-  "pesde.toml",
-  "README.md",
-  "LICENSE",
-  "src",
-]
+includes = ["pesde.toml", "README.md", "LICENSE", "src/**/*"]
 
 [target]
 environment = "roblox"
@@ -29,5 +24,4 @@ rojo = { name = "pesde/rojo", version = "^7.4.4", target = "lune" }
 stylua = { name = "pesde/stylua", version = "^2.0.1", target = "lune" }
 
 [dependencies]
-debugger = { name = "lumin/debugger", version = "^1.0.0" }
-
+debugger = { name = "lumin/debugger", version = "1.0.3" }

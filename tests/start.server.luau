@@ -4,8 +4,8 @@ local Tests = script.Parent
 local Framework = require(Packages.framework.src)
 local TESTING = {
     -- lifecycles
-    Tests.lifecycles,
-    Tests.lifecycles.callback,
+    Tests.hooks,
+    Tests.hooks.callback,
     -- providers
     Tests.providers,
     Tests.providers.dependencies,

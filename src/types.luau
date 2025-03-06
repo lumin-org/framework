@@ -6,9 +6,9 @@ export type Provider<T> = {
 	Start: (() -> ())?,
 } & T
 
-export type Lifecycle<T...> = {
+export type Hook<T...> = {
 	Name: string,
-	Fire: (self: Lifecycle<T...>, T...) -> (),
+	Fire: (self: Hook<T...>, T...) -> (),
 	Listeners: { (...any) -> () },
 }
 

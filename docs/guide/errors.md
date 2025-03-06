@@ -4,7 +4,11 @@ If you come across an error, you should be able to find it here. If not, [file a
 
 ## `AlreadyStarted`
 
-The framework has already started, you cannot create any new providers, create new lifecycles, add paths, or run `Start` again.
+The framework has already started, you cannot create any new providers, create new hooks, add paths, or run `Start` again.
+
+## `ProviderDuplicate`
+
+The provider that you attempted to create already exists with the same named you assigned it.
 
 ## `FatalInit`
 
@@ -16,7 +20,7 @@ There was an issue adding the module to the load stack, which means a simple `re
 
 ## `ReservedName`
 
-Lifecycle events cannot have the same name as one of the following reserved names:
+Hooks cannot have the same name as one of the following reserved names:
 
 - `Name`
 - `Order`

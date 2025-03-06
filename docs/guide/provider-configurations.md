@@ -4,7 +4,7 @@ There are couple provider configurations that are available for use. These are b
 
 ## Name
 
-A default name is given to your provider for profiling purposes, which is in the format of `provider-<GUID>`. There wouldn't be much reason to change it if profiling is off, because that's the only time when the provider name is actually used.
+A default name is given to your provider for profiling purposes, which is in the format of `provider-<number>`. There wouldn't be much reason to change it if profiling is off, because that's the only time when the provider name is actually used.
 
 ```luau
 {

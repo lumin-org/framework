@@ -1,12 +1,12 @@
 local Packages = script.Parent.Parent.Parent
 local Framework = require(Packages.framework.src)
-local TEST_NAME = "LIFECYCLE-TEST"
+local TEST_NAME = "HOOK-TEST"
 
 local RunService = game:GetService("RunService")
-local Lifecycle = Framework.Lifecycle("LifecycleTest")
+local Hook = Framework.Hook("HookTest")
 
 RunService.Heartbeat:Connect(function()
-    Lifecycle:Fire(TEST_NAME)
+    Hook:Fire(TEST_NAME)
 end)
 
 return {}

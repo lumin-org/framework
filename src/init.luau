@@ -11,25 +11,20 @@ local Started = false
 local Profiling = false
 local ProviderCount = 0
 
--- Names that have been already claimed by other providers
 local ProviderNames: { string } = {}
--- Names that are reserved for the framework only
 local ReservedNames: { string } = { "Init", "Start", "Uses", "Order", "Name" }
--- Providers imported using the Add function
 local AddedProviders: { Types.Provider<any> } = {}
--- Lifecycles created using the Lifecycle function
-local AddedLifecycles: { Types.Lifecycle<...any> } = {}
--- Providers that have been loaded already
+local AddedHooks: { Types.Hook<...any> } = {}
 local InitiatedProviders: { Types.Provider<any> } = {}
 
 -- Functions
 
--- Adds the the callback from the provider to the lifecycle listeners
-local function StartLifecycles(provider: Provider<any>)
-	for _, lifecycle in AddedLifecycles do
-		if (provider :: any)[lifecycle.Name] and type((provider :: any)[lifecycle.Name]) == "function" then -- Check if the provider has a lifecycle
-			-- Add the lifecycle callback to the listeners of it
-			table.insert(lifecycle.Listeners, (provider :: any)[lifecycle.Name])
+-- Adds the the callback from the provider to the listeners of the hook
+local function StartHooks(provider: Provider<any>)
+	for _, hook in AddedHooks do
+	    if (provider :: any)[hook.Name] and type((provider :: any)[hook.Name]) == "function" then -- Check if the provider has a hook function
+	       -- Add the hook callback to the listeners of it
+	       table.insert(hook.Listeners, (provider :: any)[hook.Name])
 		end
 	end
 end
@@ -56,7 +51,7 @@ local function InitProvider(provider: Provider<any>)
 		assert(argType == "function", "InvalidType", "function", argType)
 
 		-- Use custom pcall to supply error to fatal debug
-		local success, result: Debugger.ParsedError = xpcall(function()
+		local success, result: Debugger.Parsed = xpcall(function()
 			-- Init the provider
 			if Profiling then
 				debug.setmemorycategory(provider.Name)
@@ -65,7 +60,7 @@ local function InitProvider(provider: Provider<any>)
 		end, Debugger.parse)
 
 		if not success then
-			fatal("FatalInit", result.Message) -- If there was an error, share it with the user
+			fatal("FatalInit", result.message) -- If there was an error, share it with the user
 		end
 	end
 	table.insert(InitiatedProviders, provider) -- Add to the loaded providers table
@@ -88,28 +83,28 @@ local function InitDependencies(provider: Provider<any>)
 end
 
 --[=[
-	Creates a new lifecycle that hooks onto already existing provider methods.
+	Creates a new hook that uses pre-existing provider functions.
 
-	[Open Documentation](https://lumin-org.github.io/framework/api/#lifecycle)
+	[Open Documentation](https://lumin-org.github.io/framework/api/#hook)
 ]=]
-local function Lifecycle<T...>(name: string, callback: ((self: Lifecycle<T...>, ...any) -> ())?): Lifecycle<T...>
+local function Hook<T...>(name: string, callback: ((self: Hook<T...>, ...any) -> ())?): Hook<T...>
 	assert(not Started, "AlreadyStarted")
-	assert(not table.find(ReservedNames, name), "ReservedName", name, "lifecycle")
-	local Lifecycle = table.freeze({
+	assert(not table.find(ReservedNames, name), "ReservedName", name, "hook")
+	local Hook = table.freeze({
 		Name = name :: string,
 		Listeners = {},
-		Fire = callback or function(self: Lifecycle<T...>, ...: any)
+		Fire = callback or function(self: Hook<T...>, ...: any)
 			for _, listener in self.Listeners do
 				Spawn(listener, ...)
 			end
 		end,
-		Disconnect = function(self: Lifecycle<T...>)
+		Unhook = function(self: Hook<T...>)
 			table.clear(self.Listeners)
 			table.freeze(self.Listeners)
 		end,
 	})
-	table.insert(AddedLifecycles, Lifecycle)
-	return Lifecycle
+	table.insert(AddedHooks, Hook)
+	return Hook
 end
 
 --[=[
@@ -146,18 +141,18 @@ local function Start(config: { Profiling: boolean? }?)
 	assert(not Started, "AlreadyStarted")
 
 	if config then
-		-- Set configurations
 		Profiling = config.Profiling or Profiling
 	end
 
 	-- Default provider properties
 	for _, provider in AddedProviders do
-        provider.Order = provider.Order or 1 -- Default order (no order)
         ProviderCount += 1
-		local DefaultName = provider.Name or `provider-{ProviderCount}`
-		if not table.find(ProviderNames, DefaultName) then
-            provider.Name = DefaultName -- Default naming scheme
-			table.insert(ProviderNames, DefaultName)
+        provider.Order = provider.Order or 1 -- Default order (no order)
+		provider.Name = provider.Name or `provider-{ProviderCount}`
+		if not table.find(ProviderNames, provider.Name) then
+			table.insert(ProviderNames, provider.Name)
+        else
+            fatal("ProviderDuplicate", provider.Name)
 		end
         table.freeze(provider)
 	end
@@ -168,7 +163,7 @@ local function Start(config: { Profiling: boolean? }?)
 	end)
 
 	for _, provider in AddedProviders do
-        StartLifecycles(provider)
+        StartHooks(provider)
 		InitDependencies(provider)
 		InitProvider(provider)
 	end
@@ -183,22 +178,15 @@ local function Start(config: { Profiling: boolean? }?)
 end
 
 -- Debugger
-
-Debugger.set({
-	Logs = Logs,
-	Name = "Framework",
-	URL = "https://lumin-org.github.io/framework/guide/errors#",
-})
+Debugger.set("Framework", Logs)
 
 -- Types
-
 export type Provider<T> = Types.Provider<T>
-export type Lifecycle<T...> = Types.Lifecycle<T...>
+export type Hook<T...> = Types.Hook<T...>
 
 -- Module
-
 return table.freeze({
 	Start = Start,
 	Add = Add,
-	Lifecycle = Lifecycle,
+	Hook = Hook,
 })

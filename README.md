@@ -5,13 +5,13 @@
 [![build](https://img.shields.io/github/actions/workflow/status/lumin-org/framework/release.yml?style=plastic&logo=github&logoColor=FFFFFF&label=build)](https://github.com/lumin-org/framework/blob/main/.github/workflows/release.yml)
 [![discord](https://img.shields.io/discord/1105688855375511642?logo=discord&logoColor=white&label=chat&color=4d3dff&style=plastic)](https://lumin-org.github.io/to/discord)
 
-A featherlight framework for Luau games.
+A feather light framework for Luau games.
 
 ## Prerequisites
 
 In order to use **lumin/framework** you must have the following dependencies installed:
 
-* [`pesde@^0.5.3`](https://github.com/pesde-pkg/pesde)
+* [`pesde@^0.6.0`](https://github.com/pesde-pkg/pesde)
 * [`rojo@^7.4.4`](https://github.com/rojo-rbx/rojo)
 
 ## Usage
@@ -19,14 +19,13 @@ In order to use **lumin/framework** you must have the following dependencies ins
 This usage examples creates a new, and basic provider that uses a dependency.
 
 ```luau
-local Framework = require(path.to.framework)
 local Dependency = require(path.to.dependency)
 
 local function Init()
     Dependency.NuclearExplosion()
 end
 
-return Framework.New {
+return {
     Init = Init,
     Uses = { Dependency } -- Makes the dependency init before this module
 }
