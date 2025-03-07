@@ -95,12 +95,15 @@ jobs:
             pesde.toml
             package.json
 
-      - name: Regenerate lockfile
+      - name: Install dependencies
         run: |
           pesde install
+          npm ci
 
       - name: Publish packages
         run: |
+          npx rbxtsc --rojo typescript.project.json
+          npm publish
           pesde publish -y
 
       - name: Commit package config
