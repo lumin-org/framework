@@ -1,6 +1,6 @@
 {
     "name": "@rbxts/lumin-framework",
-    "version": "10.0.0",
+    "version": "11.0.0",
     "main": "out/init.luau",
     "typings": "out/index.d.ts",
     "license": "MIT",
