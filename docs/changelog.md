@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [11.0.0] - 2025-03-06
+### Changed
+
+- Changed `Lifecycle` to `Hook` in favor of more accurate naming
+- Shortened code in some areas (possible optimizations)
 
 ## [10.0.0] - 2025-01-29
 
