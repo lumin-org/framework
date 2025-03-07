@@ -11,23 +11,6 @@ permissions:
   id-token: write
 
 jobs:
-  setup:
-    name: Setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          
-      - name: Setup Pesde
-        uses: lumin-org/setup-pesde@v0.4.1
-        with:
-          token: ${{ secrets.PESDE_TOKEN }}
-          cache: true
-          
-      - name: Install dependencies
-        run: pesde install
-        
   changelog:
     name: Changelog
     runs-on: ubuntu-latest
@@ -60,6 +43,15 @@ jobs:
         with:
           ref: main
 
+      - name: Setup Pesde
+        uses: lumin-org/setup-pesde@v0.4.1
+        with:
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          pesde install
+
       - name: Build
         run: rojo build standalone.project.json --output ./standalone.rbxm
 
@@ -84,6 +76,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          
+      - name: Setup Pesde
+        uses: lumin-org/setup-pesde@v0.4.1
+        with:
+          token: ${{ secrets.PESDE_TOKEN }}
+          cache: true
 
       - id: get-version
         uses: battila7/get-version-action@v2
