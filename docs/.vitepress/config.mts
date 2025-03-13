@@ -64,10 +64,10 @@ function guide(): DefaultTheme.SidebarItem[] {
       ],
     },
     {
-      text: "Lifecycles",
+      text: "Hooks",
       collapsed: false,
       items: [
-        { text: "Creating Lifecycles", link: "creating-lifecycles" },
+        { text: "Creating Hooks", link: "creating-hooks" },
         { text: "Unique Callbacks", link: "unique-callbacks" },
       ],
     },
@@ -82,7 +82,7 @@ function guide(): DefaultTheme.SidebarItem[] {
     },
     {
       text: "Errors",
-      collapsed: false,
+      collapsed: true,
       items: [
         { text: "Already Started", link: "errors#alreadystarted" },
         { text: "Provider Duplicate", link: "errors#providerduplicate" },
@@ -100,8 +100,7 @@ function reference(): DefaultTheme.SidebarItem[] {
     {
       items: [
         { text: "Framework", link: "/" },
-        { text: "Lifecycle", link: "lifecycle" },
-        { text: "Provider", link: "provider" },
+        { text: "Hook", link: "hook" },
       ],
     },
   ];

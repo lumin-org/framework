@@ -37,18 +37,18 @@ A list of settings or options to apply to the framework.
 
 ---
 
-### `Lifecycle`
+### `Hook`
 
-Creates a new lifecycle that hooks onto already existing controller methods.
+Creates a new hook that uses pre-existing provider functions.
 
 **Parameters**
 
 - **name:** `string`\
-The name of the lifecycle method to run
+The name of the function to run
 
-- **callback:** `(self: Lifecycle, ...any) -> ()` <Badge type="warning" text="OPTIONAL" />\
+- **callback:** `(self: Hook, ...any) -> ()` <Badge type="warning" text="OPTIONAL" />\
 The callback that should run when `Fire` is called. Defaults to spawning each listener with arguments
 
 **Returns**
 
-- [`Lifecycle`](./lifecycle.md)
+- [`Hook`](./hook.md)
